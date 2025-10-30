@@ -26,4 +26,9 @@ RSpec.describe Cart, type: :model do
       expect { shopping_cart.remove_if_abandoned }.to change { Cart.count }.by(-1)
     end
   end
+
+  describe 'associations' do
+    it { should have_many(:cart_items).dependent(:destroy) }
+    it { should have_many(:products).through(:cart_items) }
+  end
 end
