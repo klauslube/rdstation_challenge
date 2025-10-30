@@ -55,73 +55,122 @@ bundle exec rspec
 
 ## 🔌 Endpoints da API
 
-### GET /cart
-Retorna o carrinho atual da sessão.
+### 1. Adicionar produto ao carrinho
 
-**Resposta:**
+**POST /cart**
+
+Adiciona um produto ao carrinho da sessão atual e retorna a lista de produtos do carrinho.
+
+**Request:**
+```json
+{
+  "product_id": 345,
+  "quantity": 2
+}
+```
+
+**Response:** `201 Created`
+```json
+{
+  "id": 789,
+  "products": [
+    {
+      "id": 645,
+      "name": "Nome do produto",
+      "quantity": 2,
+      "unit_price": 1.99,
+      "total_price": 3.98
+    },
+    {
+      "id": 646,
+      "name": "Nome do produto 2",
+      "quantity": 2,
+      "unit_price": 1.99,
+      "total_price": 3.98
+    }
+  ],
+  "total_price": 7.96
+}
+```
+
+### 2. Listar itens do carrinho
+
+**GET /cart**
+
+Retorna os produtos no carrinho atual da sessão.
+
+**Response:** `200 OK`
+```json
+{
+  "id": 789,
+  "products": [
+    {
+      "id": 645,
+      "name": "Nome do produto",
+      "quantity": 2,
+      "unit_price": 1.99,
+      "total_price": 3.98
+    },
+    {
+      "id": 646,
+      "name": "Nome do produto 2",
+      "quantity": 2,
+      "unit_price": 1.99,
+      "total_price": 3.98
+    }
+  ],
+  "total_price": 7.96
+}
+```
+
+### 3. Incrementar quantidade de produto
+
+**POST /cart/add_items**
+
+Incrementa a quantidade de um produto já existente no carrinho. Se o produto não existir, adiciona com a quantidade especificada.
+
+**Request:**
+```json
+{
+  "product_id": 1230,
+  "quantity": 1
+}
+```
+
+**Response:** `200 OK`
 ```json
 {
   "id": 1,
   "products": [
     {
-      "id": 1,
-      "name": "Product Name",
+      "id": 1230,
+      "name": "Nome do produto X",
       "quantity": 2,
-      "unit_price": 10.0,
-      "total_price": 20.0
+      "unit_price": 7.00,
+      "total_price": 14.00
+    },
+    {
+      "id": 1020,
+      "name": "Nome do produto Y",
+      "quantity": 1,
+      "unit_price": 9.90,
+      "total_price": 9.90
     }
   ],
-  "total_price": 20.0
+  "total_price": 23.90
 }
 ```
 
-### POST /cart
-Adiciona um produto ao carrinho ou substitui a quantidade existente.
+### 4. Remover produto do carrinho
 
-**Request:**
+**DELETE /cart/:product_id**
+
+Remove um produto específico do carrinho.
+
+**Response:** `200 OK`
 ```json
 {
-  "product_id": 1,
-  "quantity": 2
-}
-```
-
-**Resposta:** `201 Created`
-```json
-{
-  "id": 1,
-  "products": [...],
-  "total_price": 20.0
-}
-```
-
-### POST /cart/add_items
-Incrementa a quantidade de um produto no carrinho.
-
-**Request:**
-```json
-{
-  "product_id": 1,
-  "quantity": 1
-}
-```
-
-**Resposta:** `200 OK`
-```json
-{
-  "id": 1,
-  "products": [...],
-  "total_price": 30.0
-}
-```
-
-### DELETE /cart/:product_id
-Remove um produto do carrinho.
-
-**Resposta:** `200 OK`
-```json
-{
-  "id": 1,
+  "id": 789,
   "products": [],
   "total_price": 0.0
 }
