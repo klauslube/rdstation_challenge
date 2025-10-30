@@ -17,6 +17,17 @@ class CartsController < ApplicationController
     render json: cart_json_response(@cart), status: :created
   end
 
+  def add_item
+    cart_item = @cart.cart_items.find_or_initialize_by(product: @product)
+    cart_item.quantity ||= 0
+    cart_item.quantiy += params[:quantity].to_i
+    cart_item.save!
+
+    @cart.update_last_interaction!
+
+    render json: cart_json_response(@cart)
+  end
+
   private
 
   def set_session_cart
