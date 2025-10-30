@@ -5,6 +5,16 @@ FactoryBot.define do
     last_interaction_at { Time.current }
     total_price { 0.0 }
     
+    trait :active_recent do
+      status { :active }
+      last_interaction_at { 1.hour.ago }
+    end
+    
+    trait :active_old do
+      status { :active }
+      last_interaction_at { 4.hours.ago }
+    end
+    
     trait :abandoned do
       status { :abandoned }
       abandoned_at { 5.days.ago }
