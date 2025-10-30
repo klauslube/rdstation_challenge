@@ -27,19 +27,16 @@ class CartsController < ApplicationController
     @product = Product.find(params[:product_id])
   end
 
-    def find_or_create_cart
-      @cart = set_session_cart
-      
-      unless @cart
-        @cart = Cart.create!(
-          total_price: 0.0,
-          last_interaction_at: Time.current
-        )
-        session[:cart_id] = @cart.id
-      end
+  def find_or_create_cart
+    @cart = set_session_cart
     
-      @cart
+    unless @cart
+      @cart = Cart.create!(last_interaction_at: Time.current)
+      session[:cart_id] = @cart.id
     end
+  
+    @cart
+  end
 
   def cart_json_response(cart)
     {
