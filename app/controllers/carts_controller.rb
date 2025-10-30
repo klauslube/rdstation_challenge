@@ -1,7 +1,7 @@
 class CartsController < ApplicationController
   before_action :set_session_cart, only: [:show]
-  before_action :find_or_create, only: [:create]
-  before_action :set_product, only: [:create]
+  before_action :find_or_create, only: [:create, :add_item]
+  before_action :set_product, only: [:create, :add_item]
 
   def show 
     render json: cart_json_response(@cart || Cart.new)
