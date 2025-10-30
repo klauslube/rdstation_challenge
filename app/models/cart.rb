@@ -13,4 +13,16 @@ class Cart < ApplicationRecord
   def calculate_total_price!
     update!(total_price: cart_items.sum(&:total_price))
   end
+  
+  def mark_as_abandoned!
+    return unless active? && last_interaction_at && last_interaction_at <= 3.hours.ago
+
+    update!(status: :abandoned, abandoned_at: Time.current)
+  end
+  
+  def remove_if_abandoned!
+    return unless abandoned? && abandoned_at && abandoned_at <= 7.days.ago
+
+    destroy!
+  end
 end
