@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :products
   resource :cart, only: [:show, :create] do
     post :add_items, on: :collection
+    delete ':product_id', action: :destroy, on: :collection
   end
 
 

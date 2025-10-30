@@ -1,7 +1,7 @@
 class CartsController < ApplicationController
   before_action :set_session_cart, only: [:show]
-  before_action :find_or_create, only: [:create, :add_item]
-  before_action :set_product, only: [:create, :add_item]
+  before_action :find_or_create_cart, only: %i[create add_items destroy]
+  before_action :set_product, only: %i[create add_items destroy]
 
   def show 
     render json: cart_json_response(@cart || Cart.new)
@@ -17,14 +17,26 @@ class CartsController < ApplicationController
     render json: cart_json_response(@cart), status: :created
   end
 
-  def add_item
+  def add_items
     cart_item = @cart.cart_items.find_or_initialize_by(product: @product)
     cart_item.quantity ||= 0
-    cart_item.quantiy += params[:quantity].to_i
+    cart_item.quantity += params[:quantity].to_i
     cart_item.save!
 
     @cart.update_last_interaction!
 
+    render json: cart_json_response(@cart)
+  end
+
+  def destroy
+    return render json: { error: 'Cart not found' }, status: :not_found unless @cart
+
+    cart_item = @cart.cart_items.find_by(product: @product)
+    return render json: { error: 'Product not found in cart' }, status: :not_found unless cart_item
+    
+    cart_item.destroy!
+    @cart.update_last_interaction!
+    
     render json: cart_json_response(@cart)
   end
 
