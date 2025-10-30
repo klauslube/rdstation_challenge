@@ -1,6 +1,6 @@
 class CartsController < ApplicationController
   before_action :set_session_cart, only: [:show]
-  before_action :find_or_create_cart, only: %i[create add_items destroy]
+  before_action :find_or_create_cart, only: %i[create add_items]
   before_action :set_product, only: %i[create add_items destroy]
 
   def show 
@@ -29,6 +29,7 @@ class CartsController < ApplicationController
   end
 
   def destroy
+    @cart = Cart.find_by(id: session[:cart_id])
     return render json: { error: 'Cart not found' }, status: :not_found unless @cart
 
     cart_item = @cart.cart_items.find_by(product: @product)
